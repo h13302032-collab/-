@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة الأدمن</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="admin-box">
+    <h1>📋 لوحة التحكم</h1>
+    <p>إدارة الطلبات المسجلة</p>
+    <p id="count"></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>الاسم</th>
+          <th>رقم الهاتف</th>
+          <th>الطلب</th>
+          <th>الوقت</th>
+          <th>إجراء</th>
+        </tr>
+      </thead>
+      <tbody id="orders"></tbody>
+    </table>
+  </div>
+
+  <script>
+    function loadOrders() {
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      let table = document.getElementById("orders");
+      let count = document.getElementById("count");
+      table.innerHTML = "";
+
+      count.innerText = "إجمالي الطلبات: " + orders.length;
+
+      orders.forEach((o, index) => {
+        let tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${o.customer}</td>
+          <td>${o.phone}</td>
+          <td>${o.text}</td>
+          <td>${o.time}</td>
+          <td><button onclick="deleteOrder(${index})">🗑️ حذف</button></td>
+        `;
+
+        table.appendChild(tr);
+      });
+    }
+
+    function deleteOrder(index) {
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      if (confirm("هل تريد حذف هذا الطلب؟")) {
+        orders.splice(index, 1);
+        localStorage.setItem("orders", JSON.stringify(orders));
+        loadOrders();
+      }
+    }
+
+    loadOrders();
+  </script>
+</body>
+</html>

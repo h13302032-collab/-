@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>إضافة طلب</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="form-box">
+    <h2 id="welcome"></h2>
+    <p>🛒 أضف طلبك هنا:</p>
+    <input type="text" id="order" placeholder="مثال: 2 كيس سكر + 1 زيت">
+    <button onclick="addOrder()">إرسال</button>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    document.getElementById("welcome").innerText =
+      "مرحبًا، " + (localStorage.getItem("hostName") || "مشتري");
+
+    function addOrder() {
+      let order = document.getElementById("order").value;
+      let name = localStorage.getItem("hostName") || "مجهول";
+      let phone = localStorage.getItem("hostPhone") || "غير معروف";
+
+      if (order.trim() === "") {
+        document.getElementById("msg").innerText = "❌ من فضلك اكتب الطلب";
+        return;
+      }
+
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      let now = new Date().toLocaleString("ar-EG");
+
+      orders.push({ text: order, time: now, customer: name, phone: phone });
+      localStorage.setItem("orders", JSON.stringify(orders));
+
+      document.getElementById("msg").style.color = "green";
+      document.getElementById("msg").innerText = "✅ تم إرسال الطلب بنجاح";
+      document.getElementById("order").value = "";
+    }
+  </script>
+</body>
+</html>
